@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duck n Dive Bar & Grill</title>
+<style>
+/* --- Reset & Base --- */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Arial', sans-serif;}
+body { background:#0B0B0B; color:#fff; overflow-x:hidden; scroll-behavior:smooth; position:relative;}
+a { text-decoration:none; color:inherit; }
+
+/* Neon glow */
+.neon { color:#fff; text-shadow:0 0 5px #f00,0 0 10px #f00,0 0 20px #00f,0 0 30px #00f; animation:glowText 2s infinite alternate;}
+@keyframes glowText {0% { text-shadow:0 0 5px #f00,0 0 10px #00f;} 100% { text-shadow:0 0 20px #f00,0 0 40px #00f;}}
+
+/* Header */
+header { position:fixed; top:0; width:100%; display:flex; justify-content:space-between; align-items:center; padding:20px 40px; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index:1000; }
+.logo { font-size:1.8rem; font-weight:bold; }
+nav { display:flex; flex-wrap:wrap; }
+nav a { margin-left:25px; font-weight:bold; transition:0.3s; position:relative; cursor:pointer;}
+nav a:hover { color:#f00; text-shadow:0 0 5px #f00,0 0 10px #00f; }
+
+/* Sections */
+section { padding:120px 40px; position:relative; z-index:1;}
+h2 { font-size:2.8rem; margin-bottom:30px; text-align:center; text-shadow:0 0 5px #f00,0 0 10px #00f; }
+.content { display:flex; flex-wrap:wrap; justify-content:center; gap:40px; }
+
+/* Hero */
+#hero { height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; background: linear-gradient(135deg, rgba(255,0,0,0.3), rgba(0,0,255,0.3)), url('hero-placeholder.jpg') center/cover no-repeat; position:relative; overflow:hidden; }
+#hero h1 { font-size:3.5rem; margin-bottom:20px; z-index:2; }
+#hero p { font-size:1.5rem; margin-bottom:40px; color:#fffcc0; text-shadow:0 0 5px #f00,0 0 10px #00f; z-index:2;}
+.btn { padding:15px 35px; font-size:1.2rem; border:none; cursor:pointer; background:none; color:#fff; border:2px solid #f00; border-radius:10px; text-shadow:0 0 5px #f00; transition:0.3s; z-index:2; }
+.btn:hover { background:#f00; color:#000; text-shadow:0 0 10px #0ff,0 0 20px #f0f; transform:scale(1.1); }
+
+/* Neon lines */
+.neon-lines { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; overflow:hidden; z-index:1;}
+.neon-line { position:absolute; width:2px; height:100%; background:linear-gradient(to bottom, #f00, #0ff); animation:lineMove 6s linear infinite; opacity:0.4;}
+@keyframes lineMove { 0% { transform:translateY(-100%);} 100% { transform:translateY(100%);} }
+
+/* Cards / placeholders */
+.card { background:#111; border:1px solid #f00; border-radius:15px; width:300px; padding:20px; text-align:center; box-shadow:0 0 15px #f00,0 0 30px #00f; transition:0.3s; cursor:pointer; }
+.card:hover { transform:scale(1.05); box-shadow:0 0 25px #f00,0 0 50px #0ff; }
+
+/* Fake image slots */
+.placeholder { width:100%; height:200px; background:linear-gradient(135deg,#222,#333); border:2px dashed #f00; border-radius:15px; display:flex; justify-content:center; align-items:center; font-size:1.2rem; color:#fffcc0; text-shadow:0 0 5px #f00; box-shadow:0 0 10px #f00; }
+
+/* Weekly schedule */
+#timeslots { text-align:center; overflow-x:auto; }
+.weekly-table { margin:0 auto; border-collapse: separate; border-spacing: 15px; display:inline-block; min-width:400px; }
+.weekly-table td { padding:15px 25px; border-radius:10px; background:#111; color:#fff; border:2px solid #f00; text-shadow:0 0 5px #f00; font-weight:bold; text-align:center; cursor:default;}
+.weekly-table td.open:hover { background:#f00; color:#000; box-shadow:0 0 15px #f00,0 0 30px #0ff; transform:scale(1.05);}
+.weekly-table td.closed { background:#222; color:#888; border:2px dashed #f00; text-shadow:none; font-style:italic; }
+
+/* Map */
+#location { text-align:center; }
+.map-pin { width:20px; height:20px; background:#f00; border-radius:50%; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); box-shadow:0 0 10px #f00,0 0 20px #00f; animation:pulse 2s infinite;}
+@keyframes pulse { 0% { transform:translate(-50%,-50%) scale(1); opacity:1;} 50% { transform:translate(-50%,-50%) scale(1.5); opacity:0.5;} 100% { transform:translate(-50%,-50%) scale(1); opacity:1;} }
+
+/* Mini gallery */
+#mini-gallery { margin-top:60px; overflow:hidden; position:relative; }
+.gallery-slider { display:flex; gap:20px; transition:transform 0.5s linear; }
+.gallery-slider .placeholder { flex:0 0 300px; height:200px; transition:0.3s; background:linear-gradient(135deg,#222,#333); box-shadow:0 0 10px #f00;}
+.gallery-slider .placeholder:hover { transform:scale(1.1); box-shadow:0 0 20px #0ff,0 0 40px #f0f; }
+
+/* Glow background */
+.glow-bg { position:absolute; top:-100px; left:-100px; width:300px; height:300px; background:radial-gradient(circle,#f00,#00f); filter:blur(200px); animation:moveGlow 8s infinite alternate; z-index:0; }
+@keyframes moveGlow { 0% { transform: translate(0,0); } 50% { transform: translate(600px,400px); } 100% { transform: translate(-200px,300px); } }
+
+/* Footer */
+footer { padding:40px; text-align:center; color:#ccc; font-size:0.9rem; text-shadow:0 0 5px #f00; }
+
+/* Mobile */
+@media(max-width:768px){
+  #hero h1 { font-size:2.2rem; }
+  #hero p { font-size:1.1rem; }
+  nav a { margin-left:15px; font-size:0.9rem; }
+  .weekly-table { min-width:auto; display:flex; flex-direction:column; gap:10px; }
+  .weekly-table td { padding:12px; font-size:0.9rem; white-space:nowrap; }
+  .gallery-slider .placeholder { flex:0 0 250px; height:160px; }
+  .card { width:90%; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="logo neon">Duck n Dive</div>
+  <nav>
+    <a onclick="showPage('home')">Home</a>
+    <a onclick="showPage('menu')">Menu</a>
+    <a onclick="scrollToHours()">Hours</a>
+    <a onclick="document.getElementById('location').scrollIntoView({behavior:'smooth'})">Location</a>
+    <a onclick="showPage('gallery')">Gallery</a>
+  </nav>
+</header>
+
+<div class="glow-bg"></div>
+
+<!-- Neon lines -->
+<div class="neon-lines">
+  <div class="neon-line" style="left:10%; animation-delay:0s;"></div>
+  <div class="neon-line" style="left:30%; animation-delay:1s;"></div>
+  <div class="neon-line" style="left:50%; animation-delay:2s;"></div>
+  <div class="neon-line" style="left:70%; animation-delay:3s;"></div>
+  <div class="neon-line" style="left:90%; animation-delay:4s;"></div>
+</div>
+
+<!-- PAGES -->
+<div id="page-container">
+
+<!-- Home Page -->
+<div id="home">
+  <section id="hero">
+    <h1 class="neon">Your Secret Night Out</h1>
+    <p>Drinks, live music & epic vibes – Salt Rock 4399</p>
+    <button class="btn" onclick="showPage('menu')">View Menu</button>
+  </section>
+
+  <section id="timeslots">
+    <h2>Weekly Hours</h2>
+    <table class="weekly-table">
+      <tr><td class="closed">Monday: Closed</td></tr>
+      <tr><td class="open">Tuesday: 5:00 PM – 12:00 AM</td></tr>
+      <tr><td class="open">Wednesday: 5:00 PM – 12:00 AM</td></tr>
+      <tr><td class="open">Thursday: 5:00 PM – 12:00 AM</td></tr>
+      <tr><td class="open">Friday: 5:00 PM – 12:00 AM</td></tr>
+      <tr><td class="open">Saturday: 5:00 PM – 12:00 AM</td></tr>
+      <tr><td class="open">Sunday: 5:00 PM – 12:00 AM</td></tr>
+    </table>
+  </section>
+
+  <section id="location">
+    <h2>Find Us</h2>
+    <div class="placeholder" style="position:relative;">Map Placeholder
+      <div class="map-pin"></div>
+    </div>
+  </section>
+
+  <section id="mini-gallery">
+    <h2>Gallery</h2>
+    <div class="gallery-slider" id="gallerySlider">
+      <div class="placeholder">Photo 1</div>
+      <div class="placeholder">Photo 2</div>
+      <div class="placeholder">Photo 3</div>
+      <div class="placeholder">Photo 4</div>
+      <div class="placeholder">Photo 5</div>
+    </div>
+    <div style="text-align:center; margin-top:20px;">
+      <button class="btn" onclick="showPage('gallery')">View Full Gallery</button>
+    </div>
+  </section>
+</div>
+
+<!-- Menu Page -->
+<div id="menu" style="display:none;">
+  <section>
+    <h2>Menu</h2>
+    <div class="content">
+      <div class="card">
+        <div class="placeholder">Image Slot</div>
+        <h3>Menu Item 1</h3>
+        <p>Delicious description here</p>
+      </div>
+      <div class="card">
+        <div class="placeholder">Image Slot</div>
+        <h3>Menu Item 2</h3>
+        <p>Delicious description here</p>
+      </div>
+      <div class="card">
+        <div class="placeholder">Image Slot</div>
+        <h3>Menu Item 3</h3>
+        <p>Delicious description here</p>
+      </div>
+    </div>
+  </section>
+  <div style="text-align:center; margin-top:20px;">
+    <button class="btn" onclick="showPage('home')">Back to Home</button>
+  </div>
+</div>
+
+<!-- Gallery Page -->
+<div id="gallery" style="display:none;">
+  <section>
+    <h2>Gallery</h2>
+    <div class="gallery-slider" id="galleryFullSlider">
+      <div class="placeholder">Photo 1</div>
+      <div class="placeholder">Photo 2</div>
+      <div class="placeholder">Photo 3</div>
+      <div class="placeholder">Photo 4</div>
+      <div class="placeholder">Photo 5</div>
+    </div>
+    <div style="text-align:center; margin-top:20px;">
+      <button class="btn" onclick="showPage('home')">Back to Home</button>
+    </div>
+  </section>
+</div>
+
+</div>
+
+<footer>
+  &copy; 2026 Duck n Dive Bar & Grill. All Rights Reserved.
+</footer>
+
+<script>
+// Page switcher
+function showPage(pageId){
+  document.querySelectorAll('#page-container > div').forEach(d => d.style.display='none');
+  document.getElementById(pageId).style.display='block';
+  window.scrollTo(0,0);
+}
+
+// Scroll to hours section
+function scrollToHours(){
+  showPage('home');
+  setTimeout(() => {
+    document.getElementById('timeslots').scrollIntoView({behavior:'smooth'});
+  }, 50);
+}
+
+// Infinite loop mini-gallery
+const slider = document.getElementById('gallerySlider');
+let galleryItems = Array.from(slider.children);
+galleryItems.forEach(item => slider.appendChild(item.cloneNode(true)));
+let pos = 0;
+function slideGallery(){
+  pos -= 1;
+  if(pos <= -slider.scrollWidth/2) pos = 0;
+  slider.style.transform = `translateX(${pos}px)`;
+  requestAnimationFrame(slideGallery);
+}
+slideGallery();
+</script>
+
+</body>
+</html>
